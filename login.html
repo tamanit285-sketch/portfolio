@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GolfHackz – Connection</title>
+  <link rel="stylesheet" href="shared.css"/>
+  <link rel="stylesheet" href="index.css"/>
+  <style>
+    /* Styling specifically for the authentication wrapper */
+    .auth-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      width: 100%;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    .auth-card {
+      position: relative;
+      z-index: 3;
+      background: rgba(11, 15, 26, 0.85);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(0, 212, 255, 0.3);
+      border-radius: 20px;
+      padding: 40px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 32px 64px rgba(0,0,0,.6), 0 0 40px rgba(0,212,255,0.1);
+      text-align: center;
+    }
+    .auth-title {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: 10px;
+      line-height: 1.2;
+    }
+    .auth-subtitle {
+      font-size: 0.9rem;
+      color: rgba(240,244,255,0.6);
+      margin-bottom: 32px;
+    }
+    .auth-form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .input-group {
+      text-align: left;
+    }
+    .input-label {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 8px;
+    }
+    .auth-input {
+      width: 100%;
+      background: rgba(240,244,255,0.03);
+      border: 1px solid rgba(240,244,255,0.1);
+      border-radius: 12px;
+      padding: 16px;
+      color: var(--white);
+      font-size: 1rem;
+      transition: all var(--tr);
+      box-sizing: border-box;
+    }
+    .auth-input:focus {
+      outline: none;
+      border-color: rgba(0, 255, 76, 0.6);
+      background: rgba(0, 255, 76, 0.02);
+      box-shadow: 0 0 16px rgba(0, 255, 76, 0.1);
+    }
+    .auth-btn {
+      width: 100%;
+      justify-content: center;
+      margin-top: 10px;
+    }
+    .auth-switch {
+      margin-top: 24px;
+      font-size: 0.85rem;
+      color: rgba(240,244,255,0.4);
+    }
+    .auth-switch a {
+      color: var(--cyan);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color var(--tr);
+    }
+    .auth-switch a:hover {
+      color: var(--white);
+    }
+    .back-home {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.8rem;
+      color: rgba(240,244,255,0.4);
+      text-decoration: none;
+      margin-bottom: 24px;
+      transition: color var(--tr);
+    }
+    .back-home:hover {
+      color: var(--cyan);
+    }
+  </style>
+</head>
+<body>
+
+  <section class="hero auth-wrapper">
+    <!-- Grid and Scanline effects from index.css -->
+    <div class="hero-grid"></div>
+
+    <!-- Animated background neon glowing ambient fields -->
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <div class="auth-card">
+      <a href="index.html" class="back-home">← Back to homepage</a>
+      
+      <h1 class="auth-title">Welcome Back</h1>
+      <p class="auth-subtitle">Access your digital training dashboard instantly.</p>
+
+      <form class="auth-form" action="#" method="POST">
+        <div class="input-group">
+          <label class="input-label" for="email">Your Email Address</label>
+          <input 
+            type="email" 
+            id="email" 
+            name="email" 
+            class="auth-input" 
+            placeholder="name@example.com" 
+            required 
+            autocomplete="email"
+          />
+        </div>
+
+        <button type="submit" class="btn-primary auth-btn">
+          Sign In
+        </button>
+      </form>
+
+      <div class="auth-switch">
+        New to the platform? <a href="subscribe.html">Subscribe here</a>
+      </div>
+    </div>
+  </section>
+
+</body>
+</html>

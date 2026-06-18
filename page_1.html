@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>golfhackz — Episode 1: We're Tired of Being Sh*tty at Golf</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --green-deep:  #0B2010;
+    --green-mid:   #1A3D22;
+    --green-blade: #2E6B3E;
+    --lime:        #C5F135;
+    --cream:       #F5F0E8;
+    --white:       #FFFFFF;
+    --muted:       #8A9E8C;
+    --dark-text:   #111611;
+    --card-bg:     #132918;
+    --rule:        rgba(197,241,53,0.25);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--green-deep);
+    color: var(--cream);
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── HEADER ─────────────────────────────────── */
+  header {
+    background: var(--green-deep);
+    border-bottom: 1px solid var(--rule);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    padding: 0 2rem;
+  }
+  .header-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+  }
+  .logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    letter-spacing: .08em;
+    color: var(--lime);
+  }
+  .logo span { color: var(--cream); }
+  .badge {
+    font-size: .72rem;
+    font-weight: 600;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* ── HERO ────────────────────────────────────── */
+  .hero {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 5rem 2rem 3rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+  }
+  .hero-eyebrow {
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--lime);
+    margin-bottom: .75rem;
+  }
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3.2rem, 6vw, 6rem);
+    line-height: .95;
+    letter-spacing: .03em;
+    color: var(--white);
+    margin-bottom: 1.5rem;
+  }
+  .hero-title em {
+    color: var(--lime);
+    font-style: normal;
+  }
+  .hero-subtitle {
+    font-size: 1.05rem;
+    color: var(--muted);
+    margin-bottom: 2rem;
+    max-width: 420px;
+  }
+  .hero-meta {
+    display: flex;
+    gap: 1.5rem;
+    font-size: .78rem;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border-top: 1px solid var(--rule);
+    padding-top: 1.5rem;
+  }
+  .hero-meta span { color: var(--cream); }
+
+  .hero-visual {
+    position: relative;
+  }
+  .episode-card {
+    background: var(--card-bg);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .episode-card-header {
+    background: var(--green-mid);
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .ep-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.5rem;
+    color: var(--lime);
+    line-height: 1;
+  }
+  .ep-label {
+    font-size: .7rem;
+    font-weight: 700;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .ep-title-sm {
+    font-size: .95rem;
+    font-weight: 600;
+    color: var(--cream);
+  }
+  .episode-card-body {
+    padding: 1.5rem;
+  }
+  .twins-label {
+    font-size: .7rem;
+    font-weight: 700;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    color: var(--lime);
+    margin-bottom: .5rem;
+  }
+  .twins-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: .25rem;
+  }
+  .twins-sub {
+    font-size: .82rem;
+    color: var(--muted);
+    margin-bottom: 1.5rem;
+  }
+  .challenge-grid {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: .5rem;
+    background: rgba(0,0,0,.25);
+    border-radius: 3px;
+    padding: 1rem;
+  }
+  .challenge-player {
+    text-align: center;
+  }
+  .challenge-player .name {
+    font-weight: 700;
+    font-size: .88rem;
+    color: var(--cream);
+  }
+  .challenge-player .role {
+    font-size: .7rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .1em;
+  }
+  .vs {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    color: var(--lime);
+    text-align: center;
+  }
+  .challenge-footer {
+    margin-top: 1rem;
+    text-align: center;
+    font-size: .75rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--lime);
+    padding: .5rem;
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+  }
+
+  /* ── SECTION WRAPPER ─────────────────────────── */
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  /* ── DIVIDER ─────────────────────────────────── */
+  .section-divider {
+    border: none;
+    border-top: 1px solid var(--rule);
+    margin: 4rem 0;
+  }
+
+  .section-label {
+    font-size: .7rem;
+    font-weight: 700;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--lime);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--rule);
+  }
+
+  /* ── WHO SECTION ──────────────────────────────── */
+  .who-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+  .who-card {
+    background: var(--card-bg);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .who-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: var(--lime);
+  }
+  .who-role {
+    font-size: .68rem;
+    font-weight: 700;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--lime);
+    margin-bottom: .5rem;
+  }
+  .who-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    color: var(--white);
+    letter-spacing: .04em;
+    margin-bottom: .75rem;
+  }
+  .who-bio {
+    font-size: .88rem;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+  .who-bio strong { color: var(--cream); font-weight: 600; }
+
+  /* ── BODY TEXT SECTION ───────────────────────── */
+  .article-section {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 4rem;
+    align-items: start;
+  }
+  .article-aside {
+    position: sticky;
+    top: 80px;
+  }
+  .big-quote {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.35rem;
+    font-style: italic;
+    color: var(--lime);
+    line-height: 1.5;
+    border-left: 2px solid var(--lime);
+    padding-left: 1.25rem;
+  }
+  .aside-label {
+    font-size: .68rem;
+    font-weight: 700;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 1.5rem;
+  }
+
+  .article-body h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.4rem;
+    letter-spacing: .04em;
+    color: var(--white);
+    margin-bottom: 1rem;
+    line-height: 1;
+  }
+  .article-body p {
+    font-size: .95rem;
+    color: var(--cream);
+    opacity: .85;
+    margin-bottom: 1.25rem;
+    line-height: 1.8;
+  }
+  .article-body p strong {
+    color: var(--lime);
+    font-weight: 600;
+    opacity: 1;
+  }
+  .author-sig {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--rule);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .sig-circle {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--green-blade);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem;
+    color: var(--lime);
+    flex-shrink: 0;
+  }
+  .sig-name {
+    font-weight: 700;
+    font-size: .88rem;
+    color: var(--cream);
+  }
+  .sig-title {
+    font-size: .75rem;
+    color: var(--lime);
+    text-transform: uppercase;
+    letter-spacing: .1em;
+  }
+
+  /* ── CAMERA SETUP ────────────────────────────── */
+  .camera-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin: 2.5rem 0;
+  }
+  .camera-card {
+    background: var(--card-bg);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 2rem;
+    text-align: center;
+  }
+  .camera-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+  .camera-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem;
+    color: var(--lime);
+    letter-spacing: .05em;
+    margin-bottom: .5rem;
+  }
+  .camera-desc {
+    font-size: .83rem;
+    color: var(--muted);
+    line-height: 1.65;
+  }
+  .camera-tip {
+    margin-top: 1rem;
+    padding: .75rem 1rem;
+    background: rgba(197,241,53,.06);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    font-size: .78rem;
+    color: var(--cream);
+    text-align: left;
+  }
+  .camera-tip strong { color: var(--lime); }
+
+  /* ── CHIPP'D SECTION ─────────────────────────── */
+  .chipd-section {
+    background: var(--card-bg);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    overflow: hidden;
+    margin: 4rem 0;
+  }
+  .chipd-header {
+    background: var(--lime);
+    padding: 1.25rem 2.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .chipd-header-text {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem;
+    letter-spacing: .06em;
+    color: var(--dark-text);
+  }
+  .chipd-header-sub {
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: rgba(0,0,0,.45);
+  }
+  .chipd-body {
+    padding: 2.5rem;
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 3rem;
+    align-items: start;
+  }
+  .chipd-body h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    color: var(--white);
+    letter-spacing: .03em;
+    margin-bottom: 1rem;
+    line-height: 1;
+  }
+  .chipd-body p {
+    font-size: .9rem;
+    color: var(--muted);
+    line-height: 1.75;
+    margin-bottom: 1rem;
+  }
+  .chipd-body p strong { color: var(--cream); }
+  .award-badge {
+    background: rgba(197,241,53,.1);
+    border: 1px solid var(--lime);
+    border-radius: 4px;
+    padding: 1rem 1.25rem;
+    margin: 1.5rem 0;
+  }
+  .award-badge .award-title {
+    font-size: .68rem;
+    font-weight: 700;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--lime);
+    margin-bottom: .25rem;
+  }
+  .award-badge .award-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--white);
+  }
+  .award-badge .award-desc {
+    font-size: .78rem;
+    color: var(--muted);
+    margin-top: .25rem;
+  }
+  .chipd-cta-box {
+    background: rgba(0,0,0,.3);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 1.75rem;
+    text-align: center;
+  }
+  .chipd-cta-box .cta-eyebrow {
+    font-size: .65rem;
+    font-weight: 700;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--lime);
+    margin-bottom: .5rem;
+  }
+  .chipd-cta-box .cta-price {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem;
+    color: var(--white);
+    letter-spacing: .05em;
+    margin-bottom: .25rem;
+  }
+  .chipd-cta-box .cta-sub {
+    font-size: .75rem;
+    color: var(--muted);
+    margin-bottom: 1.25rem;
+    line-height: 1.5;
+  }
+  .btn {
+    display: inline-block;
+    background: var(--lime);
+    color: var(--dark-text);
+    font-weight: 700;
+    font-size: .82rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    padding: .85rem 1.75rem;
+    border-radius: 2px;
+    text-decoration: none;
+    transition: opacity .2s;
+  }
+  .btn:hover { opacity: .85; }
+  .btn-outline {
+    background: transparent;
+    border: 1px solid var(--lime);
+    color: var(--lime);
+  }
+  .btn-outline:hover { background: rgba(197,241,53,.08); opacity: 1; }
+  .chipd-includes {
+    margin-top: 1.25rem;
+    text-align: left;
+  }
+  .chipd-includes-title {
+    font-size: .65rem;
+    font-weight: 700;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: .5rem;
+  }
+  .chipd-includes li {
+    font-size: .78rem;
+    color: var(--cream);
+    padding: .3rem 0;
+    border-bottom: 1px solid var(--rule);
+    list-style: none;
+    display: flex;
+    gap: .5rem;
+  }
+  .chipd-includes li::before {
+    content: '✓';
+    color: var(--lime);
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  /* ── NEWSLETTER PATCH ────────────────────────── */
+  .patch-section {
+    background: linear-gradient(135deg, var(--green-mid) 0%, var(--green-deep) 100%);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 3rem 2.5rem;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 3rem;
+    align-items: center;
+    margin: 4rem 0;
+  }
+  .patch-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.4rem;
+    color: var(--white);
+    letter-spacing: .04em;
+    margin-bottom: .75rem;
+    line-height: 1;
+  }
+  .patch-title span { color: var(--lime); }
+  .patch-features {
+    list-style: none;
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: .6rem;
+  }
+  .patch-features li {
+    font-size: .88rem;
+    color: var(--muted);
+    display: flex;
+    gap: .75rem;
+  }
+  .patch-features li::before {
+    content: '→';
+    color: var(--lime);
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .patch-features li strong { color: var(--cream); }
+  .patch-cta {
+    text-align: center;
+    min-width: 200px;
+  }
+  .patch-cta p {
+    font-size: .78rem;
+    color: var(--muted);
+    margin-top: .75rem;
+  }
+
+  /* ── FOOTER ──────────────────────────────────── */
+  footer {
+    border-top: 1px solid var(--rule);
+    margin-top: 6rem;
+    padding: 3rem 2rem;
+    text-align: center;
+  }
+  .footer-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    color: var(--lime);
+    letter-spacing: .1em;
+    margin-bottom: .5rem;
+  }
+  footer p {
+    font-size: .78rem;
+    color: var(--muted);
+  }
+
+  /* ── RESPONSIVE ──────────────────────────────── */
+  @media (max-width: 768px) {
+    .hero, .who-grid, .camera-grid, .chipd-body,
+    .article-section, .patch-section {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+    .article-aside { position: static; }
+    .hero { padding: 3rem 1.5rem 2rem; }
+    .container { padding: 0 1.5rem; }
+  }
+
+  /* ── ANIMATIONS ──────────────────────────────── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .hero-eyebrow, .hero-title, .hero-subtitle, .hero-meta {
+    animation: fadeUp .6s ease both;
+  }
+  .hero-title    { animation-delay: .1s; }
+  .hero-subtitle { animation-delay: .2s; }
+  .hero-meta     { animation-delay: .3s; }
+  .hero-visual   { animation: fadeUp .6s ease .2s both; }
+
+  /*__________________________video________________________________*/
+
+  .video-wrapper {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+  height: 0;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.video-wrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ─────────────────────────────────── -->
+<header>
+  <div class="header-inner">
+    <div class="logo">[golf<span>hackz</span>]</div>
+    <div class="badge">The Patch · Episode 1 · Jun 3, 2026</div>
+  </div>
+</header>
+
+<!-- ── HERO ──────────────────────────────────────── -->
+<section class="container">
+  <div class="hero">
+    <div class="hero-copy">
+      <div class="hero-eyebrow">90-Day Game Transformation</div>
+      <h1 class="hero-title">"We're Tired of Being<br /><em>Sh*tty</em><br />at Golf"</h1>
+      <p class="hero-subtitle">A twin challenge, a real coach, and a 90-day timeline to find out who improves most. This is where it starts.</p>
+      <div class="hero-meta">
+        <div>By <span>Andrew Banner</span></div>
+        <div>&</div>
+        <div><span>Spencer Dennis</span></div>
+        <div>·</div>
+        <div><span>Jun 3, 2026</span></div>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="episode-card">
+        <div class="episode-card-header">
+          <div class="ep-num">01</div>
+          <div>
+            <div class="ep-label">Episode</div>
+            <div class="ep-title-sm">The Challenge Begins</div>
+          </div>
+        </div>
+        <div class="episode-card-body">
+          <div class="twins-label">Meet the Athletes</div>
+          <div class="twins-name">Twins Off Target</div>
+          <div class="twins-sub">Devlin &amp; Mitchell Arensberg · Former College Golfers</div>
+          <div class="challenge-grid">
+            <div class="challenge-player">
+              <div class="name">Devlin</div>
+              <div class="role">Twin A</div>
+            </div>
+            <div class="vs">VS</div>
+            <div class="challenge-player">
+              <div class="name">Mitchell</div>
+              <div class="role">Twin B</div>
+            </div>
+          </div>
+          <div class="challenge-footer">⏱ 90 Days · Who Improves Most?</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="container">
+  <hr class="section-divider" />
+  
+  <div style="max-width: 640px; margin: 0 auto 40px auto;">
+    <div class="video-container" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px;">
+      <iframe 
+        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;"
+        src="https://www.youtube.com/embed/XTcfZJkOVAg" 
+        title="YouTube video player" 
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+        referrerpolicy="strict-origin-when-cross-origin" 
+        allowfullscreen>
+      </iframe>
+    </div>
+  </div>
+
+  <div class="section-label">The Team</div>
+  <div class="who-grid">
+    <div class="who-card">
+      <div class="who-role">Architect</div>
+      <div class="who-name">Spencer Dennis</div>
+      <p class="who-bio">Former pro turned high-performance coach. Founded <strong>CoachNow</strong> — the highest-rated coaching app in the world, used by specialists across <strong>80 sports in 140 countries</strong>. After its second acquisition, he now works with golf-tech founders building the next wave of tools.</p>
+    </div>
+    <div class="who-card">
+      <div class="who-role">Fixer</div>
+      <div class="who-name">Andrew Banner</div>
+      <p class="who-bio">Specialist in fixing swings, scores, and bodies <strong>remotely</strong>. Has worked with Tour players and everyday golfers alike — each one walking away with the result they came for. He <strong>builds the plans and calls the reps</strong>. The voice you'll hear when a drill lands in your inbox.</p>
+    </div>
+  </div>
+</section>
+<!-- ── FAULTS & FIXES ─────────────────────────── -->
+<section class="container" style="margin-top: 5rem;">
+  <div class="article-section">
+    <div class="article-aside">
+      <p class="big-quote">"The range game doesn't transfer to the course — because most golfers don't show up with an independent mindset."</p>
+      <div class="aside-label" style="margin-top:1.5rem;">— Andrew Banner, Fixer</div>
+    </div>
+    <div class="article-body">
+      <div class="section-label">Faults &amp; Fixes</div>
+      <h2>Become an Independent Golfer</h2>
+      <p>The whole reason you go to a coach is to learn and improve your swing. But one of the biggest complaints from average golfers is that their range game <strong>doesn't transfer to the course</strong>.</p>
+      <p>Why? Because they don't show up to practice with an independent golfer mindset. That means holding yourself accountable between sessions — learning to self-assess from two key camera angles.</p>
+
+      <div class="camera-grid">
+        <div class="camera-card">
+          <div class="camera-icon">📸</div>
+          <div class="camera-name">Face On</div>
+          <p class="camera-desc">Camera faces your chest. Used to assess posture, alignment, and arm path through impact.</p>
+          <div class="camera-tip"><strong>Setup tip:</strong> Chest height, hands centred in the frame — imagine an X from corner to corner, your hands at the intersection.</div>
+        </div>
+        <div class="camera-card">
+          <div class="camera-icon">🎥</div>
+          <div class="camera-name">Down the Line</div>
+          <p class="camera-desc">Camera sits behind you, pointing toward the target. Best for tracking swing plane and club path.</p>
+          <div class="camera-tip"><strong>Setup tip:</strong> Same height rule — hands centred in the X. Align the camera down your target line.</div>
+        </div>
+      </div>
+
+      <p>When you're taking lessons, ask your coach exactly what to look for in solo practice. <strong>Work on one thing at a time.</strong> That single focus is what lets the range game finally show up on the course.</p>
+      <p>When you can recognise a mishit the moment it happens — because you've watched enough video and talked through adjustments with your coach — that's when you've earned the right to call yourself an independent golfer.</p>
+
+      <div class="author-sig">
+        <div class="sig-circle">AB</div>
+        <div>
+          <div class="sig-name">Andrew Banner</div>
+          <div class="sig-title">Fixer · [golfhackz]</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CHIP'D ──────────────────────────────────── -->
+<section class="container">
+  <hr class="section-divider" />
+  <div class="chipd-section">
+    <div class="chipd-header">
+      <div>
+        <div class="chipd-header-sub">Tech Drop</div>
+        <div class="chipd-header-text">CHIP'D — A Launch Monitor Inside the Ball 🤯</div>
+      </div>
+    </div>
+    <div class="chipd-body">
+      <div>
+        <h3>The Holy Grail.<br />Finally Real.</h3>
+        <p>This is the innovation the industry has been chasing for years. <strong>Many have tried. Many have failed.</strong> The CHIP'D team pulled it off — a fully functioning launch monitor embedded inside the golf ball itself.</p>
+        <div class="award-badge">
+          <div class="award-title">PGA Show 2026 · Pinnacle Award</div>
+          <div class="award-name">Best in Show</div>
+          <div class="award-desc">Major ball companies circled. Top 100 coaches begged for access. Launch monitor brands took notice.</div>
+        </div>
+        <p>The hype is real. First wave ships soon — but you have <strong>1 week left</strong> to lock in an early adopter pre-order for 2026.</p>
+        <p>This is the biggest tech release in golf in the last five years. First — and likely last — chance this year.</p>
+        <div class="author-sig" style="margin-top:1.5rem;">
+          <div class="sig-circle">SD</div>
+          <div>
+            <div class="sig-name">Spencer Dennis</div>
+            <div class="sig-title">Architect · [golfhackz]</div>
+          </div>
+        </div>
+      </div>
+      <div class="chipd-cta-box">
+        <div class="cta-eyebrow">Early Adopter Pre-Order</div>
+        <div class="cta-price">CHIP'D Ball</div>
+        <div class="cta-sub">Putt with data. Full launch monitor metrics. Inside the ball.</div>
+        <a href="#" class="btn">Lock In Pre-Order</a>
+        <div class="chipd-includes" style="margin-top:1.5rem;">
+          <div class="chipd-includes-title">Includes</div>
+          <ul class="chipd-includes">
+            <li>Set of CHIP'D Balls</li>
+            <li>Mobile Companion App</li>
+            <li>Real-time launch data</li>
+            <li>Early Adopter Pricing</li>
+          </ul>
+        </div>
+        <p style="font-size:.7rem;color:var(--muted);margin-top:1rem;line-height:1.5;">Subscribe to The Patch to unlock the pre-order link.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── THE PATCH CTA ───────────────────────────── -->
+<section class="container">
+  <div class="patch-section">
+    <div>
+      <div class="section-label">The Newsletter</div>
+      <div class="patch-title">Subscribe to<br /><span>The Patch</span></div>
+      <ul class="patch-features">
+        <li><strong>Every two weeks</strong>, straight to your inbox.</li>
+        <li><strong>One email</strong> — practical programming you can actually run on your game. No bandaid tips.</li>
+        <li><strong>One podcast episode</strong> — candid conversations, live coaching, and interviews.</li>
+        <li><strong>Exclusive access</strong> to tech and coaching you can only get here.</li>
+      </ul>
+    </div>
+    <div class="patch-cta">
+      <a href="subscribe.html" class="btn" style="display:block;margin-bottom:.75rem;">Subscribe Free</a>
+      <a href="#" class="btn btn-outline" style="display:block;">Browse Episodes</a>
+      <p>No spam. No fluff. Just golf.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ─────────────────────────────────── -->
+<footer>
+  <div class="footer-logo">[golfhackz]</div>
+  <p>Better Golf. Unlocked.</p>
+  <p style="margin-top:.5rem;" style="color: red;">© 2026 Tamani.A</p>
+</footer>
+
+</body>
+</html>

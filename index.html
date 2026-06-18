@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>golfhackz</title>
+  <link rel="stylesheet" href="shared.css"/>
+  <link rel="stylesheet" href="index.css"/>
+
+  <!-- ══════════ EMAIL POPUP STYLES ══════════ -->
+  <style>
+    /* Overlay */
+    #gh-popup-overlay {
+      position: fixed; inset: 0; z-index: 9999;
+      background: rgba(6,10,18,0.80);
+      backdrop-filter: blur(7px);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity .35s ease;
+    }
+    #gh-popup-overlay.open { opacity: 1; pointer-events: all; }
+
+    /* Card */
+    #gh-popup {
+      position: relative;
+      background: #0e1520;
+      border: 1px solid rgba(0,212,255,0.30);
+      border-radius: 22px;
+      padding: 46px 42px 38px;
+      width: 100%; max-width: 450px;
+      margin: 20px;
+      box-shadow: 0 40px 100px rgba(0,0,0,.65), 0 0 60px rgba(0,212,255,0.07);
+      transform: translateY(30px) scale(0.97);
+      transition: transform .42s cubic-bezier(0.16,1,0.3,1);
+    }
+    #gh-popup-overlay.open #gh-popup { transform: translateY(0) scale(1); }
+
+    /* Corner accents */
+    #gh-popup::before {
+      content:''; position:absolute; top:0; left:0;
+      width:70px; height:70px;
+      border-top:1px solid rgba(0,212,255,0.55);
+      border-left:1px solid rgba(0,212,255,0.55);
+      border-radius:22px 0 0 0; pointer-events:none;
+    }
+    #gh-popup::after {
+      content:''; position:absolute; bottom:0; right:0;
+      width:70px; height:70px;
+      border-bottom:1px solid rgba(0,212,255,0.55);
+      border-right:1px solid rgba(0,212,255,0.55);
+      border-radius:0 0 22px 0; pointer-events:none;
+    }
+
+    /* Scan line inside popup */
+    .popup-scan {
+      position:absolute; top:0; left:-3%; width:1px; height:100%;
+      background:linear-gradient(to bottom,transparent,rgba(0,212,255,.55) 40%,rgba(0,212,255,.9) 50%,rgba(0,212,255,.55) 60%,transparent);
+      animation:pscan 4s ease-in-out infinite;
+      pointer-events:none; opacity:.5;
+    }
+    @keyframes pscan{0%{left:-3%;opacity:0}10%{opacity:1}90%{opacity:1}100%{left:103%;opacity:0}}
+
+    /* Close */
+    #gh-popup-close {
+      position:absolute; top:14px; right:18px;
+      background:none; border:none; cursor:pointer;
+      color:rgba(240,244,255,.35); font-size:1.35rem; line-height:1;
+      transition:color .2s;
+    }
+    #gh-popup-close:hover { color:#f0f4ff; }
+
+    /* Logo row */
+    .popup-logo {
+      display:flex; align-items:center; gap:10px; justify-content:center;
+      margin-bottom:26px;
+    }
+    .popup-logo-mark {
+      width:34px; height:34px; border-radius:9px;
+      background:linear-gradient(135deg,green,yellow);
+      display:flex; align-items:center; justify-content:center;
+      font-size:.95rem; font-weight:700; color:#0b0f1a;
+      box-shadow:0 0 16px rgba(0,212,255,0.35);
+    }
+    .popup-logo-name {
+      font-family:'Cormorant Garamond',serif;
+      font-weight:600; font-size:1.3rem;
+      letter-spacing:3px; text-transform:uppercase; color:#fff;
+    }
+
+    /* Eyebrow */
+    .popup-eyebrow {
+      display:flex; align-items:center; gap:7px; justify-content:center;
+      font-size:.64rem; font-weight:700; letter-spacing:3px; text-transform:uppercase;
+      color:var(--cyan); margin-bottom:9px;
+    }
+    .popup-dot {
+      width:5px; height:5px; border-radius:50%; background:var(--cyan);
+      animation:pdot 1.4s ease-in-out infinite; flex-shrink:0;
+    }
+    @keyframes pdot{0%,100%{opacity:1}50%{opacity:.25}}
+
+    /* Heading */
+    .popup-title {
+      font-family:'Cormorant Garamond',serif;
+      font-size:1.85rem; font-weight:600;
+      color:#f0f4ff; text-align:center; line-height:1.15; margin-bottom:7px;
+    }
+    .popup-title em {
+      font-style:italic; color:transparent;
+      background:linear-gradient(90deg,var(--cyan),#7DF9FF);
+      -webkit-background-clip:text; background-clip:text;
+    }
+    .popup-sub {
+      font-size:.83rem; color:#7a8baa;
+      text-align:center; line-height:1.6; margin-bottom:24px;
+    }
+
+    /* Perk pills */
+    .popup-perks {
+      display:flex; flex-wrap:wrap; gap:7px; justify-content:center;
+      margin-bottom:24px;
+    }
+    .popup-perk {
+      display:flex; align-items:center; gap:5px;
+      background:rgba(0,212,255,.07); border:1px solid rgba(0,212,255,.2);
+      border-radius:100px; padding:4px 11px;
+      font-size:.7rem; font-weight:600; color:var(--cyan); letter-spacing:.5px;
+    }
+
+    /* Inputs */
+    .popup-input {
+      width:100%; padding:13px 15px; margin-bottom:11px;
+      background:rgba(240,244,255,.04);
+      border:1px solid rgba(240,244,255,.1);
+      border-radius:11px; color:#f0f4ff;
+      font-family:'DM Sans',sans-serif; font-size:.93rem;
+      outline:none;
+      transition:border-color .25s, box-shadow .25s, background .25s;
+    }
+    .popup-input::placeholder { color:rgba(240,244,255,.25); }
+    .popup-input:focus {
+      border-color:rgba(0,212,255,.55);
+      background:rgba(0,212,255,.04);
+      box-shadow:0 0 0 3px rgba(0,212,255,.08), 0 0 18px rgba(0,212,255,.1);
+    }
+
+    /* Submit */
+    .popup-btn {
+      width:100%; padding:14px;
+      background:var(--cyan); color:#0b0f1a;
+      font-family:'DM Sans',sans-serif; font-size:.83rem; font-weight:700;
+      letter-spacing:2px; text-transform:uppercase;
+      border:none; border-radius:11px; cursor:pointer;
+      box-shadow:0 0 28px rgba(0,212,255,.35), 0 4px 14px rgba(0,0,0,.3);
+      transition:all .25s;
+    }
+    .popup-btn:hover {
+      background:#fff; transform:translateY(-2px);
+      box-shadow:0 0 44px rgba(0,212,255,.5), 0 8px 22px rgba(0,0,0,.4);
+    }
+    .popup-btn:disabled { opacity:.55; cursor:not-allowed; transform:none; }
+
+    /* Success state */
+    #gh-popup-success {
+      display:none; text-align:center; padding:16px 0 8px;
+    }
+    .success-icon { font-size:2.8rem; margin-bottom:12px; }
+    #gh-popup-success h3 {
+      font-family:'Cormorant Garamond',serif;
+      font-size:1.5rem; color:#f0f4ff; margin-bottom:8px;
+    }
+    #gh-popup-success p { font-size:.83rem; color:#7a8baa; line-height:1.6; }
+
+    /* Skip */
+    .popup-skip {
+      text-align:center; margin-top:14px;
+      font-size:.73rem; color:rgba(122,139,170,.5);
+      cursor:pointer; transition:color .2s;
+    }
+    .popup-skip:hover { color:#7a8baa; }
+
+    /* Role selector buttons */
+    .role-btn {
+      flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px;
+      padding: 14px 10px;
+      background: rgba(240,244,255,.04);
+      border: 1px solid rgba(240,244,255,.12);
+      border-radius: 12px; cursor: pointer;
+      transition: all .22s ease;
+      color: #7a8baa;
+    }
+    .role-btn:hover {
+      border-color: rgba(0,212,255,.4);
+      background: rgba(0,212,255,.06);
+      color: #f0f4ff;
+    }
+    .role-btn.selected {
+      border-color: var(--cyan);
+      background: rgba(0,212,255,.12);
+      color: #f0f4ff;
+      box-shadow: 0 0 0 3px rgba(0,212,255,.12), 0 0 20px rgba(0,212,255,.15);
+    }
+    .role-icon { font-size: 1.6rem; line-height: 1; }
+    .role-label { font-size: .78rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; }
+
+    /* Role error state */
+    .role-btn.error { border-color: rgba(255,60,60,.6); }
+
+    @media(max-width:500px){
+      #gh-popup { padding:32px 18px 28px; }
+      .popup-title { font-size:1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar">
+    <a class="nav-brand" href="index.html">
+      <div class="nav-logo-mark">[gh]</div>
+      <span class="nav-name">GolfHackz</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html"    class="nav-link">Home</a></li>
+      <li><a href="page_1.html" class="nav-link" style="color: rgb(140, 255, 0);">Episodes</a></li>
+    </ul>
+    <div class="nav-auth">
+      <a href="login.html"   class="btn-connexion">Login</a>
+      <a href="subscribe.html" class="btn-inscription">Subscribe</a>
+    </div>
+    <button class="nav-toggle" id="navToggle">☰</button>
+  </nav>
+
+  <!-- ══════════ HERO ══════════ -->
+  <section class="hero">
+    <div class="hero-grid"></div>
+
+    <!-- Orbes flottants -->
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <div class="hero-content">
+      <div class="hero-eyebrow">
+        <span class="dot"></span> Collection 2026
+      </div>
+      <h1 class="hero-title">
+        <span class="line-wrap italic-line"><span class="line line-2">your limites</span></span>
+      </h1>
+      <p class="hero-sub">
+        proffesional training and guid<br>
+        to be better faster and proffesent
+      </p>
+      <div class="hero-ctas">
+        <a href="#categories" class="btn-ghost">Get to know each other</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><span class="stat-num">99%</span><span class="stat-label">Costumer satesfaction</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat"><span class="stat-num">3+</span><span class="stat-label">H/D</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat"><span class="stat-num">24/24__7/7</span><span class="stat-label">assistance</span></div>
+      </div>
+    </div>
+
+    <!-- Carte produit flottante -->
+    <div class="hero-card">
+      <div class="hcard-img"><img src="images/guid1.png" class="hcard-photo"/></div>
+      <div class="hcard-info">
+        <p class="hcard-tag">BEST-SELLER</p>
+        <p class="hcard-name">guid</p>
+        <p class="hcard-price">for free</p>
+      </div>
+      <a href="https://beehiiv-publication-files.s3.amazonaws.com/uploads/downloadables/4c4dea19-685d-40de-b2fb-55e4f6d5d046/781fc2ab-5635-474d-b0dd-b75d5414924e/GolfHackz%20Complete%20Guide.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQCMHTQSE2JGAGXHJ%2F20260616%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260616T115903Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=f611bd36b4a1b14f3fb0220b9d0f1dae2770df3ab77db4050f0036702ed48e5c" class="hcard-btn">+ Download</a>
+    </div>
+
+    <div class="hero-img-wrap">
+      <img src="images/acceuil.png" class="hero-img"/>
+      <div class="hero-img-overlay"></div>
+    </div>
+
+    <div class="hero-scroll">
+      <span>Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- ══════════ MARQUES DÉFILANTES ══════════ -->
+  <div class="ticker-wrap">
+    <div class="ticker">
+      <span>Putting Precision</span><span>·</span>
+      <span>Short Game</span><span>·</span>
+      <span>Mental Game</span><span>·</span>
+      <span>Swing Analysis</span><span>·</span>
+      <span>Ball Striking</span><span>·</span>
+      <span>Tempo Control</span><span>·</span>
+      <span>Shot Shaping</span><span>·</span>
+      <span>Green Reading</span><span>·</span>
+      <span>Distance Control</span><span>·</span>
+      <span>Pre-Shot Routine</span><span>·</span>
+      <span>Course Management</span><span>·</span>
+      <span>Bunker Play</span>
+    </div>
+  </div>
+
+  <!-- ══════════ CATÉGORIES ══════════ -->
+  <section class="categories" id="categories">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <p class="section-eyebrow">Get to know more</p>
+          <h2 class="section-title">about us</h2>
+        </div>
+      </div>
+
+      <div class="cat-grid">
+
+        <a href="https://beehiiv-publication-files.s3.amazonaws.com/uploads/downloadables/4c4dea19-685d-40de-b2fb-55e4f6d5d046/781fc2ab-5635-474d-b0dd-b75d5414924e/GolfHackz%20Complete%20Guide.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQCMHTQSE2JGAGXHJ%2F20260616%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260616T115903Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=f611bd36b4a1b14f3fb0220b9d0f1dae2770df3ab77db4050f0036702ed48e5c" class="cat-big">
+          <div class="cat-img-wrap">
+            <img src="images/guid.png" class="cat-img-photo"/>
+            <div class="cat-glow"></div>
+          </div>
+          <div class="cat-content">
+            <span class="cat-emoji">🦢</span>
+            <div>
+              <span class="cat-chip">Complete Game Improvement Guide</span>
+              <h3 class="cat-title">Shave 5 strokes off your game with a proven framework. Stop guessing and start improving.</h3>
+            </div>
+            <div class="cat-arrow">→</div>
+          </div>
+        </a>
+
+        <a href="page_1.html" class="cat-small">
+          <div class="cat-img-wrap">
+            <img src="images/video_ph.png" class="cat-img-photo"/>
+            <div class="cat-glow"></div>
+          </div>
+          <div class="cat-content">
+            <span class="cat-emoji">🎈</span>
+            <div>
+              <span class="cat-chip">Love the Game, Hate the Score</span>
+              <h3 class="cat-title">twins tired of playing terrible golf compete to see who can fix their game first.</h3>
+            </div>
+            <div class="cat-arrow">→</div>
+          </div>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div>
+        <div class="nav-brand"><div class="nav-logo-mark">[gh]</div><span class="nav-name">Golfhackz</span></div>
+      </div>
+      <div class="footer-links"><h4>Navigation</h4><ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="page_1.html">Episodes</a></li>
+      </ul></div>
+      <div class="footer-links"><h4>Contact</h4><ul>
+        <li>contact@sportshop.dz</li>
+        <li>+213 23 45 67 89</li>
+      </ul></div>
+    </div>
+    <div class="footer-bottom" style="color: red;"><p>© 2026 Tamani.A</p></div>
+  </footer>
+
+  <div class="toast" id="toast"></div>
+
+  <!-- ══════════════════════════════════════════
+       EMAIL CAPTURE POPUP
+  ══════════════════════════════════════════ -->
+  <div id="gh-popup-overlay" role="dialog" aria-modal="true" aria-label="Subscribe to GolfHackz">
+    <div id="gh-popup">
+      <div class="popup-scan"></div>
+      <button id="gh-popup-close" aria-label="Close">✕</button>
+
+      <!-- Logo -->
+      <div class="popup-logo">
+        <div class="popup-logo-mark">[gh]</div>
+        <span class="popup-logo-name">GolfHackz</span>
+      </div>
+
+      <!-- Form content -->
+      <div id="gh-popup-form-wrap">
+        <div class="popup-eyebrow"><span class="popup-dot"></span> Free for golfers</div>
+        <h2 class="popup-title">Get the <em>complete guide</em> — free</h2>
+        <p class="popup-sub">
+          Drop your email and get the full Game Improvement PDF +
+          every new episode the moment it drops.
+        </p>
+
+        <div class="popup-perks">
+          <span class="popup-perk">📖 Complete PDF Guide</span>
+          <span class="popup-perk">⛳ Weekly Tips</span>
+        </div>
+
+        <!-- Role selector -->
+        <div id="gh-role-wrap" style="display:flex;gap:10px;margin-bottom:11px;">
+          <button type="button" class="role-btn" id="role-golfer" data-role="golfer">
+            <span class="role-icon">GO</span>
+            <span class="role-label">I'm a Golfer</span>
+          </button>
+          <button type="button" class="role-btn" id="role-coach" data-role="coach">
+            <span class="role-icon">CO</span>
+            <span class="role-label">I'm a Coach</span>
+          </button>
+        </div>
+        <input class="popup-input" id="gh-popup-email" type="email" placeholder="your@email.com" autocomplete="email"/>
+        <button class="popup-btn" id="gh-popup-submit">Get free access →</button>
+      </div>
+
+      <!-- Success (shown after submit) -->
+      <div id="gh-popup-success">
+        <div class="success-icon">🏌️</div>
+        <h3>You're on the tee!</h3>
+        <p>Check your inbox — your guide is on its way.<br>Welcome to GolfHackz.</p>
+      </div>
+
+      <p class="popup-skip" id="gh-popup-skip">No thanks, I'll stay bad at golf</p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       POPUP LOGIC
+  ══════════════════════════════════════════ -->
+  <script>
+  (function () {
+    var STORAGE_KEY = 'gh_subscribed';
+    var PDF_URL     = 'https://beehiiv-publication-files.s3.amazonaws.com/uploads/downloadables/4c4dea19-685d-40de-b2fb-55e4f6d5d046/781fc2ab-5635-474d-b0dd-b75d5414924e/GolfHackz%20Complete%20Guide.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQCMHTQSE2JGAGXHJ%2F20260616%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260616T115903Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=f611bd36b4a1b14f3fb0220b9d0f1dae2770df3ab77db4050f0036702ed48e5c';
+
+    var overlay    = document.getElementById('gh-popup-overlay');
+    var closeBtn   = document.getElementById('gh-popup-close');
+    var skipBtn    = document.getElementById('gh-popup-skip');
+    var submitBtn  = document.getElementById('gh-popup-submit');
+    var formWrap   = document.getElementById('gh-popup-form-wrap');
+    var successWrap= document.getElementById('gh-popup-success');
+
+    function openPopup(dest) {
+      overlay.dataset.redirectAfter = dest || '';
+      overlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closePopup() {
+      overlay.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    function subscribed() {
+      return localStorage.getItem(STORAGE_KEY) === '1';
+    }
+
+    /* ── DEV HELPER: type  ghResetPopup()  in the browser console
+       to clear the flag and force the popup to show again ── */
+    window.ghResetPopup = function() {
+      localStorage.removeItem(STORAGE_KEY);
+      openPopup('');
+      console.log('[GolfHackz] Popup reset — showing now.');
+    };
+
+    /* ── 1. Auto-popup every 10 s as long as not subscribed ── */
+    setInterval(function(){
+      if (!subscribed() && !overlay.classList.contains('open')) {
+        openPopup('');
+      }
+    }, 10000);
+
+    /* ── 2. + Download button (hcard-btn) ── */
+    document.addEventListener('click', function(e) {
+      var btn = e.target.closest('.hcard-btn');
+      if (!btn) return;
+      if (subscribed()) return;           /* already in — let link through */
+      e.preventDefault();
+      openPopup(btn.getAttribute('href') || PDF_URL);
+    });
+
+    /* ── 3. Both category cards (cat-big, cat-small) ── */
+    document.addEventListener('click', function(e) {
+      var card = e.target.closest('.cat-big, .cat-small');
+      if (!card) return;
+      if (subscribed()) return;
+      e.preventDefault();
+      openPopup(card.getAttribute('href') || '');
+    });
+
+    /* ── Close on backdrop click ── */
+    overlay.addEventListener('click', function(e) {
+      if (e.target === overlay) closePopup();
+    });
+
+    closeBtn.addEventListener('click', closePopup);
+    skipBtn.addEventListener('click', closePopup);
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closePopup();
+    });
+
+    /* ── Role selector logic ── */
+    var selectedRole = '';
+    document.querySelectorAll('.role-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.role-btn').forEach(function(b){ b.classList.remove('selected','error'); });
+        btn.classList.add('selected');
+        selectedRole = btn.dataset.role;
+      });
+    });
+
+    /* ── Submit ── */
+    submitBtn.addEventListener('click', function() {
+      var email = document.getElementById('gh-popup-email').value.trim();
+      var re    = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      if (!selectedRole) {
+        document.querySelectorAll('.role-btn').forEach(function(b){ b.classList.add('error'); });
+        document.querySelectorAll('.role-btn').forEach(function(b){
+          setTimeout(function(){ b.classList.remove('error'); }, 1800);
+        });
+        return;
+      }
+      if (!re.test(email)){ shake(document.getElementById('gh-popup-email')); return; }
+
+      submitBtn.textContent = 'Sending…';
+      submitBtn.disabled    = true;
+
+      /* ────────────────────────────────────────────────
+         PLUG IN YOUR EMAIL SERVICE HERE.
+         Uncomment the Beehiiv block below and replace
+         YOUR_PUB_ID and YOUR_API_KEY.
+      ──────────────────────────────────────────────── */
+      console.log('[GolfHackz] New subscriber:', { role: selectedRole, email: email });
+
+      /*
+      fetch('https://api.beehiiv.com/v2/publications/YOUR_PUB_ID/subscriptions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer YOUR_API_KEY'
+        },
+        body: JSON.stringify({ email: email, custom_fields: [{ name: 'role', value: selectedRole }] })
+      });
+      */
+
+      setTimeout(function() {
+        /* localStorage.setItem(STORAGE_KEY, '1'); — removed: popup repeats every session */
+        formWrap.style.display    = 'none';
+        successWrap.style.display = 'block';
+        skipBtn.style.display     = 'none';
+
+        var dest = overlay.dataset.redirectAfter;
+        if (dest) {
+          setTimeout(function(){ window.location.href = dest; }, 2400);
+        } else {
+          setTimeout(closePopup, 2800);
+        }
+      }, 850);
+    });
+
+    /* shake helper */
+    function shake(el) {
+      el.style.borderColor = 'rgba(255,60,60,.7)';
+      el.style.boxShadow   = '0 0 0 3px rgba(255,60,60,.15)';
+      el.animate([
+        {transform:'translateX(0)'},{transform:'translateX(-6px)'},
+        {transform:'translateX(6px)'},{transform:'translateX(-4px)'},
+        {transform:'translateX(0)'}
+      ], {duration:300, easing:'ease'});
+      setTimeout(function(){ el.style.borderColor=''; el.style.boxShadow=''; }, 1800);
+    }
+
+    /* ── Navbar scroll effect (kept from original) ── */
+    var navbar = document.getElementById('navbar');
+    if (navbar) {
+      window.addEventListener('scroll', function() {
+        navbar.classList.toggle('scrolled', window.scrollY > 30);
+      });
+    }
+
+    /* ── Mobile nav toggle ── */
+    var navToggle = document.getElementById('navToggle');
+    var navLinks  = document.querySelector('.nav-links');
+    if (navToggle && navLinks) {
+      navToggle.addEventListener('click', function() {
+        navLinks.classList.toggle('open');
+      });
+    }
+  })();
+  </script>
+
+</body>
+</html>
