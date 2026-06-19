@@ -431,7 +431,6 @@
   <script>
   (function () {
     var STORAGE_KEY = 'gh_subscribed';
-    var PDF_URL     = 'https://beehiiv-publication-files.s3.amazonaws.com/uploads/downloadables/4c4dea19-685d-40de-b2fb-55e4f6d5d046/781fc2ab-5635-474d-b0dd-b75d5414924e/GolfHackz%20Complete%20Guide.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQCMHTQSE2JGAGXHJ%2F20260616%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260616T115903Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=f611bd36b4a1b14f3fb0220b9d0f1dae2770df3ab77db4050f0036702ed48e5c';
 
     var overlay    = document.getElementById('gh-popup-overlay');
     var closeBtn   = document.getElementById('gh-popup-close');
@@ -468,23 +467,6 @@
       }
     }, 10000);
 
-    /* ── 2. + Download button (hcard-btn) ── */
-    document.addEventListener('click', function(e) {
-      var btn = e.target.closest('.hcard-btn');
-      if (!btn) return;
-      if (subscribed()) return;           /* already in — let link through */
-      e.preventDefault();
-      openPopup(btn.getAttribute('href') || PDF_URL);
-    });
-
-    /* ── 3. Both category cards (cat-big, cat-small) ── */
-    document.addEventListener('click', function(e) {
-      var card = e.target.closest('.cat-big, .cat-small');
-      if (!card) return;
-      if (subscribed()) return;
-      e.preventDefault();
-      openPopup(card.getAttribute('href') || '');
-    });
 
     /* ── Close on backdrop click ── */
     overlay.addEventListener('click', function(e) {
