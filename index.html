@@ -222,11 +222,11 @@
     </a>
     <ul class="nav-links">
       <li><a href="index.html"    class="nav-link">Home</a></li>
-      <li><a href="../page_1.html" class="nav-link" style="color: rgb(140, 255, 0);">Episodes</a></li>
+      <li><a href="page_1.html" class="nav-link" style="color: rgb(140, 255, 0);">Episodes</a></li>
     </ul>
     <div class="nav-auth">
-      <a href="../login.html"   class="btn-connexion">Login</a>
-      <a href="../subscribe.html" class="btn-inscription">Subscribe</a>
+      <a href="login.html"   class="btn-connexion">Login</a>
+      <a href="subscribe.html" class="btn-inscription">Subscribe</a>
     </div>
     <button class="nav-toggle" id="navToggle">☰</button>
   </nav>
@@ -330,7 +330,7 @@
           </div>
         </a>
 
-        <a href="../page_1.html" class="cat-small">
+        <a href="page_1.html" class="cat-small">
           <div class="cat-img-wrap">
             <img src="images/video_ph.png" class="cat-img-photo"/>
             <div class="cat-glow"></div>
@@ -357,7 +357,7 @@
       </div>
       <div class="footer-links"><h4>Navigation</h4><ul>
         <li><a href="index.html">Home</a></li>
-        <li><a href="../page_1.html">Episodes</a></li>
+        <li><a href="page_1.html">Episodes</a></li>
       </ul></div>
       <div class="footer-links"><h4>Contact</h4><ul>
         <li>contact@sportshop.dz</li>
@@ -396,17 +396,16 @@
           <span class="popup-perk">📖 Complete PDF Guide</span>
           <span class="popup-perk">🎬 New Episodes</span>
           <span class="popup-perk">⛳ Weekly Tips</span>
-          <span class="popup-perk">🚫 No spam</span>
         </div>
 
         <!-- Role selector -->
         <div id="gh-role-wrap" style="display:flex;gap:10px;margin-bottom:11px;">
           <button type="button" class="role-btn" id="role-golfer" data-role="golfer">
-            <span class="role-icon">⛳</span>
+            <span class="role-icon">GO</span>
             <span class="role-label">I'm a Golfer</span>
           </button>
           <button type="button" class="role-btn" id="role-coach" data-role="coach">
-            <span class="role-icon">🏌️</span>
+            <span class="role-icon">CO</span>
             <span class="role-label">I'm a Coach</span>
           </button>
         </div>
@@ -460,11 +459,28 @@
       console.log('[GolfHackz] Popup reset — showing now.');
     };
 
-    /* ── 1. Auto-popup ONCE after 10 s — never again this session ── */
+    /* ── 1. Auto-popup ONCE after 10 s — never shows again ── */
     if (!subscribed()) {
       setTimeout(function(){ openPopup(''); }, 10000);
     }
 
+    /* ── 2. Download button ── */
+    document.addEventListener('click', function(e) {
+      var btn = e.target.closest('.hcard-btn');
+      if (!btn) return;
+      if (subscribed()) return;
+      e.preventDefault();
+      openPopup(btn.getAttribute('href') || '');
+    });
+
+    /* ── 3. Both category cards ── */
+    document.addEventListener('click', function(e) {
+      var card = e.target.closest('.cat-big, .cat-small');
+      if (!card) return;
+      if (subscribed()) return;
+      e.preventDefault();
+      openPopup(card.getAttribute('href') || '');
+    });
 
     /* ── Close on backdrop click ── */
     overlay.addEventListener('click', function(e) {
