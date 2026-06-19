@@ -4,24 +4,138 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>GolfHackz – Subscribe</title>
-  <link rel="stylesheet" href="shared.css"/>
-  <link rel="stylesheet" href="index.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
   <style>
-    /* Styling specifically for the authentication wrapper */
-    .auth-wrapper {
+    /* ─── CSS Variables ─────────────────────────────────── */
+    :root {
+      --font-display: 'Orbitron', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --white: #f0f4ff;
+      --cyan: #00d4ff;
+      --green: #00ff4c;
+      --bg: #0b0f1a;
+      --tr: 0.2s ease;
+    }
+
+    /* ─── Reset & Base ──────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--white);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ─── Hero Section ──────────────────────────────────── */
+    .hero {
+      position: relative;
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
       width: 100%;
       padding: 20px;
-      box-sizing: border-box;
+      overflow: hidden;
+      background: radial-gradient(ellipse at 50% 0%, #0d1b2e 0%, #0b0f1a 70%);
     }
+
+    /* ─── Grid Background ───────────────────────────────── */
+    .hero-grid {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background-image:
+        linear-gradient(rgba(0, 212, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 212, 255, 0.04) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: radial-gradient(ellipse at 50% 40%, black 20%, transparent 75%);
+    }
+
+    /* Scanline overlay */
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: repeating-linear-gradient(
+        to bottom,
+        transparent 0px,
+        transparent 3px,
+        rgba(0, 0, 0, 0.08) 3px,
+        rgba(0, 0, 0, 0.08) 4px
+      );
+      pointer-events: none;
+    }
+
+    /* ─── Ambient Orbs ──────────────────────────────────── */
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.45;
+      z-index: 1;
+      animation: orb-drift 8s ease-in-out infinite alternate;
+    }
+    .orb-1 {
+      width: 480px; height: 480px;
+      background: rgba(0, 212, 255, 0.18);
+      top: -100px; left: -100px;
+      animation-delay: 0s;
+    }
+    .orb-2 {
+      width: 380px; height: 380px;
+      background: rgba(0, 255, 76, 0.12);
+      bottom: -80px; right: -60px;
+      animation-delay: -3s;
+    }
+    .orb-3 {
+      width: 300px; height: 300px;
+      background: rgba(100, 60, 255, 0.14);
+      top: 40%; left: 60%;
+      animation-delay: -5s;
+    }
+    @keyframes orb-drift {
+      from { transform: translate(0, 0) scale(1); }
+      to   { transform: translate(30px, 20px) scale(1.08); }
+    }
+
+    /* ─── Primary Button ────────────────────────────────── */
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--green) 0%, var(--cyan) 100%);
+      color: #0b0f1a;
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      transition: transform var(--tr), box-shadow var(--tr), opacity var(--tr);
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(0, 212, 255, 0.35);
+    }
+    .btn-primary:active {
+      transform: translateY(0);
+      opacity: 0.9;
+    }
+
+    /* ─── Auth Card ─────────────────────────────────────── */
     .auth-card {
       position: relative;
       z-index: 3;
       background: rgba(11, 15, 26, 0.85);
       backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       border: 1px solid rgba(0, 212, 255, 0.3);
       border-radius: 20px;
       padding: 40px;
@@ -30,6 +144,7 @@
       box-shadow: 0 32px 64px rgba(0,0,0,.6), 0 0 40px rgba(0,212,255,0.1);
       text-align: center;
     }
+
     .auth-title {
       font-family: var(--font-display);
       font-size: 2.2rem;
@@ -43,14 +158,14 @@
       color: rgba(240,244,255,0.6);
       margin-bottom: 32px;
     }
+
+    /* ─── Form ──────────────────────────────────────────── */
     .auth-form {
       display: flex;
       flex-direction: column;
       gap: 20px;
     }
-    .input-group {
-      text-align: left;
-    }
+    .input-group { text-align: left; }
     .input-label {
       display: block;
       font-size: 0.72rem;
@@ -67,21 +182,71 @@
       border-radius: 12px;
       padding: 16px;
       color: var(--white);
+      font-family: var(--font-body);
       font-size: 1rem;
       transition: all var(--tr);
-      box-sizing: border-box;
     }
+    .auth-input::placeholder { color: rgba(240,244,255,0.25); }
     .auth-input:focus {
       outline: none;
       border-color: rgba(0, 255, 76, 0.6);
       background: rgba(0, 255, 76, 0.02);
       box-shadow: 0 0 16px rgba(0, 255, 76, 0.1);
     }
+
     .auth-btn {
       width: 100%;
       justify-content: center;
       margin-top: 10px;
     }
+
+    /* ─── Role Toggle ───────────────────────────────────── */
+    .role-toggle {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 8px;
+    }
+    .role-btn {
+      background: rgba(240,244,255,0.03);
+      border: 1px solid rgba(240,244,255,0.1);
+      border-radius: 14px;
+      padding: 18px 12px;
+      cursor: pointer;
+      text-align: center;
+      transition: border-color var(--tr), background var(--tr), box-shadow var(--tr);
+      font-family: var(--font-body);
+    }
+    .role-abbr {
+      display: block;
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: rgba(240,244,255,0.4);
+      transition: color var(--tr);
+    }
+    .role-label {
+      display: block;
+      font-size: 0.62rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-top: 4px;
+      color: rgba(240,244,255,0.3);
+      transition: color var(--tr);
+    }
+    .role-btn.active {
+      border-color: rgba(0, 212, 255, 0.75);
+      background: rgba(0, 212, 255, 0.06);
+      box-shadow: 0 0 22px rgba(0, 212, 255, 0.18);
+    }
+    .role-btn.active .role-abbr { color: var(--white); }
+    .role-btn.active .role-label { color: var(--cyan); }
+    .role-btn:not(.active):hover {
+      border-color: rgba(240,244,255,0.2);
+      background: rgba(240,244,255,0.04);
+    }
+
+    /* ─── Footer Links ──────────────────────────────────── */
     .auth-switch {
       margin-top: 24px;
       font-size: 0.85rem;
@@ -93,9 +258,8 @@
       font-weight: 500;
       transition: color var(--tr);
     }
-    .auth-switch a:hover {
-      color: var(--white);
-    }
+    .auth-switch a:hover { color: var(--white); }
+
     .back-home {
       display: inline-flex;
       align-items: center;
@@ -106,45 +270,63 @@
       margin-bottom: 24px;
       transition: color var(--tr);
     }
-    .back-home:hover {
-      color: var(--cyan);
+    .back-home:hover { color: var(--cyan); }
+
+    /* ─── Responsive ────────────────────────────────────── */
+    @media (max-width: 480px) {
+      .auth-card { padding: 28px 20px; }
+      .auth-title { font-size: 1.7rem; }
     }
   </style>
 </head>
 <body>
 
-  <section class="hero auth-wrapper">
-    <!-- Grid and Scanline effects from index.css -->
+  <section class="hero">
     <div class="hero-grid"></div>
 
-    <!-- Animated background neon glowing ambient fields -->
     <div class="orb orb-1"></div>
     <div class="orb orb-2"></div>
     <div class="orb orb-3"></div>
 
     <div class="auth-card">
       <a href="index.html" class="back-home">← Back to homepage</a>
-      
+
       <h1 class="auth-title">Join The Patch</h1>
       <p class="auth-subtitle">Subscribe to get framework updates and guides instantly.</p>
 
       <form class="auth-form" action="#" method="POST">
+
+        <!-- Role Selector -->
+        <div class="input-group">
+          <span class="input-label">I am a…</span>
+          <div class="role-toggle" role="group" aria-label="Select your role">
+            <button type="button" class="role-btn" data-role="golfer">
+              <span class="role-abbr">GO</span>
+              <span class="role-label">I'm a Golfer</span>
+            </button>
+            <button type="button" class="role-btn" data-role="coach">
+              <span class="role-abbr">CO</span>
+              <span class="role-label">I'm a Coach</span>
+            </button>
+          </div>
+          <input type="hidden" id="role" name="role" value=""/>
+        </div>
+
+        <!-- Email -->
         <div class="input-group">
           <label class="input-label" for="email">Your Email Address</label>
-          <input 
-            type="email" 
-            id="email" 
-            name="email" 
-            class="auth-input" 
-            placeholder="name@example.com" 
-            required 
+          <input
+            type="email"
+            id="email"
+            name="email"
+            class="auth-input"
+            placeholder="name@example.com"
+            required
             autocomplete="email"
           />
         </div>
 
-        <button type="submit" class="btn-primary auth-btn">
-          Subscribe
-        </button>
+        <button type="submit" class="btn-primary auth-btn">Subscribe</button>
       </form>
 
       <div class="auth-switch">
@@ -152,6 +334,29 @@
       </div>
     </div>
   </section>
+
+  <script>
+    const roleBtns = document.querySelectorAll('.role-btn');
+    const roleInput = document.getElementById('role');
+
+    roleBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        roleBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        roleInput.value = btn.dataset.role;
+      });
+    });
+
+    document.querySelector('.auth-form').addEventListener('submit', e => {
+      if (!roleInput.value) {
+        e.preventDefault();
+        roleBtns.forEach(b => {
+          b.style.borderColor = 'rgba(255, 80, 80, 0.7)';
+          setTimeout(() => b.style.borderColor = '', 1200);
+        });
+      }
+    });
+  </script>
 
 </body>
 </html>
