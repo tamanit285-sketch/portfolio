@@ -107,6 +107,10 @@ ul { list-style:none; }
   display:flex; align-items:center; justify-content:center;
 }
 .nav-toggle { display:none; background:none; border:none; color:var(--pearl); font-size:1.5rem; cursor:pointer; }
+/* Wrapper that groups links + auth. display:contents = invisible to desktop
+   layout (links/auth behave exactly as before), but becomes a real dropdown
+   container on mobile. */
+.nav-menu { display:contents; }
 
 /* =============================================
    FOOTER
@@ -148,16 +152,40 @@ ul { list-style:none; }
    ============================================= */
 @media(max-width:900px){
   .navbar { padding:14px 20px; }
+  .nav-toggle { display:block; position:relative; z-index:2; }
+
+  /* Legacy fallback: on any page whose links/auth are NOT inside .nav-menu
+     yet, keep them hidden (same as before) so nothing leaks into the bar. */
   .nav-links { display:none; }
-  .nav-auth .btn-connexion, .nav-auth .btn-inscription { display:none; }
-  .nav-toggle { display:block; }
-  .nav-links.open {
-    display:flex; flex-direction:column;
+  .nav-auth .btn-connexion,
+  .nav-auth .btn-inscription { display:none; }
+
+  /* Collapsible dropdown */
+  .nav-menu {
+    display:none;
     position:absolute; top:100%; left:0; width:100%;
-    background:var(--ink2); padding:24px 20px; gap:22px;
+    flex-direction:column; align-items:stretch; gap:20px;
+    background:var(--ink2);
+    padding:22px 20px;
     border-top:1px solid rgba(0,212,255,0.1);
     border-bottom:1px solid rgba(0,212,255,0.08);
+    box-shadow:0 16px 40px rgba(0,0,0,.45);
   }
+  .navbar.menu-open .nav-menu { display:flex; }
+
+  .nav-menu .nav-links {
+    display:flex; flex-direction:column; gap:18px;
+  }
+  .nav-menu .nav-auth {
+    display:flex; flex-direction:column; gap:12px; align-items:stretch;
+    padding-top:18px;
+    border-top:1px solid rgba(255,255,255,0.06);
+  }
+  .nav-menu .nav-auth .btn-connexion,
+  .nav-menu .nav-auth .btn-inscription {
+    display:block; text-align:center; padding:12px;
+  }
+
   .footer-inner { grid-template-columns:1fr 1fr; }
 }
 @media(max-width:600px){ .footer-inner { grid-template-columns:1fr; } }
