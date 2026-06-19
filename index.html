@@ -460,12 +460,10 @@
       console.log('[GolfHackz] Popup reset — showing now.');
     };
 
-    /* ── 1. Auto-popup every 10 s as long as not subscribed ── */
-    setInterval(function(){
-      if (!subscribed() && !overlay.classList.contains('open')) {
-        openPopup('');
-      }
-    }, 10000);
+    /* ── 1. Auto-popup ONCE after 10 s — never again this session ── */
+    if (!subscribed()) {
+      setTimeout(function(){ openPopup(''); }, 10000);
+    }
 
 
     /* ── Close on backdrop click ── */
@@ -526,7 +524,7 @@
       */
 
       setTimeout(function() {
-        /* localStorage.setItem(STORAGE_KEY, '1'); — removed: popup repeats every session */
+        localStorage.setItem(STORAGE_KEY, '1');
         formWrap.style.display    = 'none';
         successWrap.style.display = 'block';
         skipBtn.style.display     = 'none';
